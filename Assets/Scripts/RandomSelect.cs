@@ -28,7 +28,7 @@ public class RandomSelect : MonoBehaviour
             // 가중치 랜덤을 돌리는거
             result.Add(RandomCard()); 
             // 비어있는 카드 생성
-            CardUI cardUI = Instantiate(cardprefab, parent).GetComponent<CardUI>();
+            CardUI cardUI = Instantiate(cardprefab, parent).gameObject.GetComponent<CardUI>();
             // 정보 쑤셔넣기
             cardUI.CardUISet(result[i]);
         }
