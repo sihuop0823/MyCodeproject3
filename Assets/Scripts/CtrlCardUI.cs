@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,10 +21,7 @@ public class CtrlCardUI : MonoBehaviour
         state = true;
     }*/
 
-    public void OnClick()
-    {
-        CtrlPanel.SetActive(true);
-    }
+
 
 }// void 업데이트 추가하려면 여기 중괄호 지우면 됨.
     /*void Update()
