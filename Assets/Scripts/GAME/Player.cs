@@ -12,8 +12,14 @@ public class Player : MonoBehaviour
     public bool isTouchBottom;
     public bool isTouchLeft;
     public bool isTouchRight;
-    // gameobject 선언을 하고 Border에 tag를 달아서 CompareTag로 하는게 보기에도 좋았을까?
+    //이렇게 일일히 하지 않고 isTouchBorder 선언을 하고 gameobject 선언을 하고 Border에 tag를 달아서 CompareTag로 하는게 보기에도 좋았을까?
 
+    Animator anim;
+
+    private void Awake()
+    {
+        anim = GetComponent<Animator>();
+    }
     void Update()
     {
         float x = Input.GetAxisRaw("Horizontal");
@@ -22,10 +28,17 @@ public class Player : MonoBehaviour
         float y = Input.GetAxisRaw("Vertical");
         if ((isTouchTop && y == 1) || (isTouchBottom && y == -1))
             y = 0;
+
         Vector3 curPos = transform.position;
         Vector3 nextPos = new Vector3(x, y, 0)* Speed * Time.deltaTime;
 
         transform.position = curPos + nextPos;
+
+
+        if(Input.GetButtonDown("Horizontal") || Input.GetButtonUp("Horizontal"))
+        {
+            anim.SetInteger("Input", (int)x);
+        }
     }
 
     void OnTriggerEnter2D(Collider2D collision)
