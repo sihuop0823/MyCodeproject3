@@ -171,8 +171,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be6bf7e97445e7c4992a4801230124c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyName: L
   speed: 1
   health: 40
   sprites:
   - {fileID: -8421458170528590454, guid: 138040323294fd440a3a823e5d70ad01, type: 3}
   - {fileID: 3714015224569861163, guid: 138040323294fd440a3a823e5d70ad01, type: 3}
+  maxShotDelay: 3
+  curShotDelay: 0
+  bulletObjA: {fileID: 8607470835900562049, guid: e4b1eeb48dd865e4f9b97edf012a4de0, type: 3}
+  bulletObjB: {fileID: 8607470835900562049, guid: 2258a8a4bac1ec64583c9e921f43c92c, type: 3}
+  player: {fileID: 0}
