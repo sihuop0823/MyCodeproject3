@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
     public string enemyName;
     public float speed;
     public int health;
+    public int enemyScore;
     public Sprite[] sprites;
 
     [Header("EnemyBullet")]
@@ -68,7 +69,7 @@ public class Enemy : MonoBehaviour
     }
 
 
-    void OnHit(int dmg)
+    public void OnHit(int dmg)
     {
         health -= dmg;
         spriteRenderer.sprite = sprites[1];
@@ -76,6 +77,8 @@ public class Enemy : MonoBehaviour
 
         if(health <= 0)
         {
+            Player playerLogic = player.GetComponent<Player>();
+            playerLogic.score += enemyScore;
             Destroy(gameObject);
         }
     }

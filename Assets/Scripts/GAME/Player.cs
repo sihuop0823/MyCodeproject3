@@ -6,12 +6,15 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [Header("Player")]
+    public int life;
+    public int score;
     public float Speed;
 
     [Header("Bullet")]
     public float maxShotDelay;
     public float curShotDelay;
-    public float power;
+    public int power;
+    public int MaxPower;
 
     [Header("Border")]
     public bool isTouchTop;
@@ -23,6 +26,16 @@ public class Player : MonoBehaviour
     public GameObject bulletObjB;
     //이렇게 일일히 하지 않고 isTouchBorder 선언을 하고 gameobject 선언을 하고 Border에 tag를 달아서 CompareTag로 하는게 보기에도 좋았을까?
 
+    [Header("Manager")]
+    public GameManager manager;
+    public bool isHit;
+
+    [Header("Boom")]
+    public GameObject BoomEffect;
+    public int boom;
+    public int Maxboom;
+    public bool isBoomTime;
+
     Animator anim;
 
     private void Awake()
@@ -33,6 +46,7 @@ public class Player : MonoBehaviour
     {
         Move();
         Fire();
+        Boom();
         Reload();
     }
 
@@ -106,6 +120,34 @@ public class Player : MonoBehaviour
         curShotDelay += Time.deltaTime;
     }
 
+    void Boom()
+    {
+        if (!Input.GetButton("Fire2"))
+            return;
+
+        if (isBoomTime)
+            return;
+        if (boom == 0)
+            return;
+
+        boom--;
+        isBoomTime = true;
+
+        BoomEffect.SetActive(true);
+        Invoke("OffBoomEffect", 3f);
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        for (int index = 0; index < enemies.Length; index++)
+        {
+            Enemy enemyLogic = enemies[index].GetComponent<Enemy>();
+            enemyLogic.OnHit(1000);
+        }
+        GameObject[] bullets = GameObject.FindGameObjectsWithTag("EnemyBullet");
+        for (int index = 0; index < bullets.Length; index++)
+        {
+            Destroy(bullets[index]);
+        }
+    }
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.tag == "Border")
@@ -126,6 +168,55 @@ public class Player : MonoBehaviour
                     break;
             }
         }
+        else if(collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet")
+        {
+            if (isHit)
+                return;
+
+            isHit = true;
+            life--;
+            manager.UpdateLifeIcon(life);
+
+            if(life == 0)
+            {
+                manager.GameOver();
+            }
+            else
+            {
+                manager.RespawnPlayer();
+            }
+            gameObject.SetActive(false);
+            Destroy(collision.gameObject);
+        }
+        else if(collision.gameObject.tag == "Item")
+        {
+            Item item = collision.gameObject.GetComponent<Item>();
+            switch (item.type)
+            {
+                case "Coin":
+                    score += 1000;
+                    break;
+                case "Power":
+                    if(power == MaxPower)
+                        score += 2000;
+                    else
+                        power++;
+                    break;
+                case "Boom":
+                    if (boom == Maxboom)
+                        score += 800;
+                    else
+                        boom++;
+                    break;
+            }
+            Destroy(collision.gameObject);
+        }
+    }
+
+    void OffBoomEffect()
+    {
+        BoomEffect.SetActive(false);
+        isBoomTime = false;
     }
 
     void OnTriggerExit2D(Collider2D collision)
